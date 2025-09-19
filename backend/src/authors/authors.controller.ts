@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { Author } from './entities/author.entity';
 
 @Controller('authors')
 export class AuthorsController {
@@ -13,16 +23,18 @@ export class AuthorsController {
   }
 
   @Get()
+  @ApiOkResponse({ type: Author, isArray: true })
   findAll() {
     return this.authorsService.findAll();
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: Author })
   findOne(@Param('id') id: string) {
     return this.authorsService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
     return this.authorsService.update(+id, updateAuthorDto);
   }
