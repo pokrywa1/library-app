@@ -1,58 +1,52 @@
-# Moduł 3 – Implementacja CRUD dla autorów i książek
+# Moduł 4 – Obsługa błędów i paginacja
 
-W trzecim module przechodzimy do praktycznej implementacji operacji CRUD dla zasobów **autorów** oraz **książek**. Udoskonalamy backend zbudowany w poprzednich etapach, korzystając z Prisma ORM, NestJS oraz walidacji.
+W czwartym module porządkujemy projekt, dodajemy obsługę błędów oraz implementujemy paginację wyników. Dzięki temu aplikacja staje się bardziej stabilna, przewidywalna i przygotowana na obsługę dużych zbiorów danych.
 
-## Zakres modułu
+## Kroki realizowane w module
 
-1. **Weryfikacja konfiguracji**
+1. **Porządkowanie projektu**
 
-   * Uruchomienie serwera i sprawdzenie dokumentacji Swagger.
-   * Upewnienie się, że endpointy dla autorów i książek są dostępne.
+   * Rozdzielenie modeli Prisma na osobne pliki (`author.prisma`, `book.prisma`).
+   * Konfiguracja klienta Prisma z podejściem folderowym.
+   * Usunięcie zbędnych plików testowych (`*.spec.ts`, foldery `test`).
 
-2. **Tworzenie autora**
+2. **Obsługa błędów globalnych**
 
-   * Implementacja DTO z dekoratorami `ApiProperty` i walidacją (`@IsString`, `@IsEmail`, limity długości, przykłady).
-   * Dodanie kontrolera z metodą `@Post()`.
-   * Implementacja logiki w serwisie z wykorzystaniem Prisma (`author.create`).
-   * Testowanie dodawania autora w Swaggerze i weryfikacja w bazie danych.
+   * Dodanie filtra wyjątków (`PrismaClientExceptionFilter`).
+   * Mapowanie błędów Prisma na bardziej czytelne odpowiedzi HTTP.
+   * Integracja globalnego filtra w pliku `main.ts`.
 
-3. **Edycja autora**
+3. **Custom exceptions**
 
-   * Zmiana metody `@Patch` na `@Put` (pełna aktualizacja obiektu).
-   * Aktualizacja danych w serwisie za pomocą `author.update`.
-   * Testowanie aktualizacji danych autora.
+   * Utworzenie wyjątków specyficznych dla aplikacji:
 
-4. **Pobieranie autorów**
+     * `BookNotFoundException`,
+     * `AuthorNotFoundException`,
+     * inne błędy biznesowe (np. zbyt długie wartości pól).
+   * Obsługa błędów w serwisach (`update`, `remove`, `create`).
 
-   * Implementacja `findAll` i `findOne` w serwisie.
-   * Dodanie zwracania listy autorów oraz pojedynczego autora po ID.
-   * Uzupełnienie odpowiedzi o listę książek (`include: { books: true }`).
+4. **Paginacja**
 
-5. **Usuwanie autora**
+   * Utworzenie generycznej klasy odpowiedzi `PaginatedResponse<T>`.
+   * Dodanie metadanych: `totalItems`, `itemsPerPage`, `totalPages`, `currentPage`, `hasNextPage`, `hasPrevPage`.
+   * Implementacja DTO do obsługi parametrów paginacji (`page`, `limit`).
+   * Stworzenie serwisu `paginate()` z obsługą `skip` i `take`.
+   * Integracja paginacji w endpointach `findAll` dla autorów i książek.
 
-   * Dodanie metody `remove` w kontrolerze i serwisie (`author.delete`).
-   * Testowanie usuwania rekordów i weryfikacja w bazie danych.
+5. **Testowanie**
 
-6. **CRUD dla książek**
-
-   * Utworzenie DTO oraz kontrolera dla książek.
-   * Implementacja metod `create`, `update`, `findAll`, `findOne`, `remove` w serwisie.
-   * Dodanie powiązania książki z autorem (relacja `authorId`).
-   * Zwracanie szczegółowych informacji o książce wraz z jej autorem.
-   * Testowanie wszystkich operacji w Swaggerze.
+   * Sprawdzenie działania obsługi błędów (np. edycja książki z nieistniejącym autorem).
+   * Weryfikacja poprawności paginacji w Swaggerze (nawigacja po stronach wyników).
 
 ## Efekt końcowy
 
 Po zakończeniu modułu posiadamy:
 
-* w pełni działające endpointy CRUD dla autorów i książek,
-* walidację danych wejściowych,
-* automatycznie generowaną dokumentację Swagger,
-* działającą integrację Prisma z bazą PostgreSQL.
+* uporządkowaną strukturę projektu,
+* globalną obsługę błędów z filtrami i wyjątkami,
+* paginację wyników dla autorów i książek,
+* backend gotowy do integracji z frontendem.
 
 ## Zapowiedź kolejnego modułu
 
-W następnym etapie skupimy się na:
-
-* obsłudze błędów w API,
-* paginacji wyników,
+W kolejnym etapie zajmiemy się podłączeniem aplikacji frontendowej oraz dalszą integracją z API.
