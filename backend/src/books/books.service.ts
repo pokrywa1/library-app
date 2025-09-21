@@ -4,10 +4,15 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { InvalidAuthorIdException } from './exceptions/author-not-found';
 import { BookNotFoundException } from './exceptions/book-not-found';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { Book } from './entities/book.entity';
+import { PaginatedService } from 'src/common/services/paginated.service';
 
 @Injectable()
-export class BooksService {
-  constructor(private readonly prisma: PrismaService) {}
+export class BooksService extends PaginatedService<Book> {
+  constructor(prisma: PrismaService) {
+    super(prisma);
+  }
 
   async create(createBookDto: CreateBookDto) {
     const author = await this.prisma.author.findUnique({
@@ -22,10 +27,17 @@ export class BooksService {
     });
   }
 
-  findAll() {
-    return this.prisma.book.findMany({
-      include: { author: true },
-    });
+  findAll(paginationDto?: PaginationDto) {
+    return this.paginate(
+      paginationDto,
+      (skip, take) =>
+        this.prisma.book.findMany({
+          skip,
+          take,
+          include: { author: true },
+        }),
+      () => this.prisma.book.count(),
+    );
   }
 
   async findOne(id: number) {

@@ -6,12 +6,14 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
-import { Author } from './entities/author.entity';
+import { Author, AuthorPaginationResponse } from './entities/author.entity';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('authors')
 export class AuthorsController {
@@ -23,9 +25,9 @@ export class AuthorsController {
   }
 
   @Get()
-  @ApiOkResponse({ type: Author, isArray: true })
-  findAll() {
-    return this.authorsService.findAll();
+  @ApiOkResponse({ type: AuthorPaginationResponse })
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.authorsService.findAll(paginationDto);
   }
 
   @Get(':id')

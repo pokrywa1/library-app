@@ -3,10 +3,15 @@ import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthorNotFoundException } from './exceptions/author-not-found';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginatedService } from 'src/common/services/paginated.service';
+import { Author } from './entities/author.entity';
 
 @Injectable()
-export class AuthorsService {
-  constructor(private readonly prisma: PrismaService) {}
+export class AuthorsService extends PaginatedService<Author> {
+  constructor(prisma: PrismaService) {
+    super(prisma);
+  }
 
   create(createAuthorDto: CreateAuthorDto) {
     return this.prisma.author.create({
@@ -14,8 +19,16 @@ export class AuthorsService {
     });
   }
 
-  findAll() {
-    return this.prisma.author.findMany();
+  findAll(paginationDto?: PaginationDto) {
+    return this.paginate(
+      paginationDto,
+      (skip, take) =>
+        this.prisma.author.findMany({
+          skip,
+          take,
+        }),
+      () => this.prisma.author.count(),
+    );
   }
 
   async findOne(id: number) {

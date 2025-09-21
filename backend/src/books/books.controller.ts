@@ -6,12 +6,14 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
-import { Book } from './entities/book.entity';
+import { Book, BookPaginationResponse } from './entities/book.entity';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('books')
 export class BooksController {
@@ -23,9 +25,9 @@ export class BooksController {
   }
 
   @Get()
-  @ApiOkResponse({ type: Book, isArray: true })
-  findAll() {
-    return this.booksService.findAll();
+  @ApiOkResponse({ type: BookPaginationResponse })
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.booksService.findAll(paginationDto);
   }
 
   @Get(':id')

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Book } from 'src/books/entities/book.entity';
+import { PaginatedResponseDto } from 'src/common/dto/paginated-response.dto';
 
 export class Author {
   @ApiProperty({ description: 'Author ID', example: 1 })
@@ -16,4 +17,9 @@ export class Author {
     type: () => [Book],
   })
   books?: Book[];
+}
+
+export class AuthorPaginationResponse extends PaginatedResponseDto<Author> {
+  @ApiProperty({ type: () => [Author] })
+  declare items: Author[];
 }
