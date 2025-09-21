@@ -2,12 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { InvalidAuthorIdException } from './exceptions/author-not-found';
+import { BookNotFoundException } from './exceptions/book-not-found';
 
 @Injectable()
 export class BooksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createBookDto: CreateBookDto) {
+  async create(createBookDto: CreateBookDto) {
+    const author = await this.prisma.author.findUnique({
+      where: { id: createBookDto.authorId },
+    });
+    if (!author) {
+      throw new InvalidAuthorIdException();
+    }
+
     return this.prisma.book.create({
       data: createBookDto,
     });
@@ -19,14 +28,35 @@ export class BooksService {
     });
   }
 
-  findOne(id: number) {
-    return this.prisma.book.findUnique({
+  async findOne(id: number) {
+    const book = await this.prisma.book.findUnique({
       where: { id: id },
       include: { author: true },
     });
+    if (!book) {
+      throw new BookNotFoundException();
+    }
+    return book;
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
+  async update(id: number, updateBookDto: UpdateBookDto) {
+    const existing = await this.prisma.book.findUnique({ where: { id } });
+    if (!existing) {
+      throw new BookNotFoundException();
+    }
+
+    if (
+      updateBookDto.authorId !== undefined &&
+      updateBookDto.authorId !== null
+    ) {
+      const author = await this.prisma.author.findUnique({
+        where: { id: updateBookDto.authorId },
+      });
+      if (!author) {
+        throw new InvalidAuthorIdException();
+      }
+    }
+
     return this.prisma.book.update({
       data: updateBookDto,
       where: {
@@ -35,7 +65,12 @@ export class BooksService {
     });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const existing = await this.prisma.book.findUnique({ where: { id } });
+    if (!existing) {
+      throw new BookNotFoundException();
+    }
+
     return this.prisma.book.delete({
       where: { id: id },
     });
