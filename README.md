@@ -1,52 +1,60 @@
-# Moduł 4 – Obsługa błędów i paginacja
+# Moduł 5 – Konfiguracja projektu frontendowego
 
-W czwartym module porządkujemy projekt, dodajemy obsługę błędów oraz implementujemy paginację wyników. Dzięki temu aplikacja staje się bardziej stabilna, przewidywalna i przygotowana na obsługę dużych zbiorów danych.
+W piątym module rozpoczynamy pracę nad frontendem aplikacji. Tworzymy projekt w React z Vite, instalujemy bibliotekę komponentów Mantine oraz konfigurujemy środowisko do dalszej implementacji.
 
 ## Kroki realizowane w module
 
-1. **Porządkowanie projektu**
+1. **Inicjalizacja projektu React**
 
-   * Rozdzielenie modeli Prisma na osobne pliki (`author.prisma`, `book.prisma`).
-   * Konfiguracja klienta Prisma z podejściem folderowym.
-   * Usunięcie zbędnych plików testowych (`*.spec.ts`, foldery `test`).
+   - Utworzenie projektu za pomocą Vite (`react + typescript`).
+   - Instalacja zależności (`npm install`).
+   - Uruchomienie serwera deweloperskiego (`npm run dev`) pod adresem `http://localhost:5183`.
 
-2. **Obsługa błędów globalnych**
+2. **Instalacja biblioteki komponentów Mantine**
 
-   * Dodanie filtra wyjątków (`PrismaClientExceptionFilter`).
-   * Mapowanie błędów Prisma na bardziej czytelne odpowiedzi HTTP.
-   * Integracja globalnego filtra w pliku `main.ts`.
+   - Dodanie paczek: `@mantine/core`, `@mantine/hooks`.
+   - Instalacja PostCSS i konfiguracja pliku `postcss.config.js`.
+   - Dodanie stylów Mantine w pliku głównym (`main.tsx`).
+   - Owrapowanie aplikacji w `MantineProvider`.
 
-3. **Custom exceptions**
+3. **Pierwszy komponent**
 
-   * Utworzenie wyjątków specyficznych dla aplikacji:
+   - Utworzenie prostego przycisku z Mantine (`<Button>Hello</Button>`).
+   - Weryfikacja poprawności działania komponentów i stylów.
 
-     * `BookNotFoundException`,
-     * `AuthorNotFoundException`,
-     * inne błędy biznesowe (np. zbyt długie wartości pól).
-   * Obsługa błędów w serwisach (`update`, `remove`, `create`).
+4. **Konfiguracja formatowania kodu**
 
-4. **Paginacja**
+   - Włączenie automatycznego formatowania przy zapisie (`Prettier`).
+   - Instalacja i konfiguracja wtyczki Prettier w VS Code.
 
-   * Utworzenie generycznej klasy odpowiedzi `PaginatedResponse<T>`.
-   * Dodanie metadanych: `totalItems`, `itemsPerPage`, `totalPages`, `currentPage`, `hasNextPage`, `hasPrevPage`.
-   * Implementacja DTO do obsługi parametrów paginacji (`page`, `limit`).
-   * Stworzenie serwisu `paginate()` z obsługą `skip` i `take`.
-   * Integracja paginacji w endpointach `findAll` dla autorów i książek.
+5. **Czyszczenie projektu**
 
-5. **Testowanie**
+   - Usunięcie zbędnych plików i stylów (np. `App.css`).
+   - Grupowanie importów i usunięcie nieużywanych elementów.
 
-   * Sprawdzenie działania obsługi błędów (np. edycja książki z nieistniejącym autorem).
-   * Weryfikacja poprawności paginacji w Swaggerze (nawigacja po stronach wyników).
+6. **Instalacja dodatkowych bibliotek**
+
+   - `axios` – komunikacja z API.
+   - `react-hook-form` – obsługa formularzy.
+   - `react-query` – zarządzanie stanem danych, cache, obsługa błędów i ładowania.
+   - Konfiguracja `QueryClientProvider` w pliku głównym aplikacji.
+
+7. **Konfiguracja ESLint**
+
+   - Instalacja ESLint i dodanie reguł dostarczonych przez Mantine oraz React Query.
+   - Aktualizacja konfiguracji parsera TypeScript i ustawień projektu.
+   - Ignorowanie plików konfiguracyjnych (`*.config.js`, `*.cjs`).
+   - Restart serwera ESLint i weryfikacja działania.
 
 ## Efekt końcowy
 
 Po zakończeniu modułu posiadamy:
 
-* uporządkowaną strukturę projektu,
-* globalną obsługę błędów z filtrami i wyjątkami,
-* paginację wyników dla autorów i książek,
-* backend gotowy do integracji z frontendem.
+- działającą aplikację React z Vite,
+- skonfigurowaną bibliotekę komponentów Mantine,
+- dodatkowe narzędzia wspierające integrację z API i walidację formularzy,
+- czyste i ujednolicone środowisko deweloperskie.
 
 ## Zapowiedź kolejnego modułu
 
-W kolejnym etapie zajmiemy się podłączeniem aplikacji frontendowej oraz dalszą integracją z API.
+W kolejnym etapie zajmiemy się tworzeniem struktury frontendowej aplikacji oraz implementacją komponentów do obsługi danych z API.
