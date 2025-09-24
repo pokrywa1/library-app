@@ -1,60 +1,60 @@
-# Moduł 5 – Konfiguracja projektu frontendowego
+# Moduł 6 – Struktura frontendu i integracja z API
 
-W piątym module rozpoczynamy pracę nad frontendem aplikacji. Tworzymy projekt w React z Vite, instalujemy bibliotekę komponentów Mantine oraz konfigurujemy środowisko do dalszej implementacji.
+W szóstym module tworzymy strukturę projektu frontendowego oraz implementujemy integrację z API dla autorów i książek. Skupiamy się na pobieraniu, dodawaniu, edycji i usuwaniu danych.
 
 ## Kroki realizowane w module
 
-1. **Inicjalizacja projektu React**
+1. **Struktura projektu**
 
-   - Utworzenie projektu za pomocą Vite (`react + typescript`).
-   - Instalacja zależności (`npm install`).
-   - Uruchomienie serwera deweloperskiego (`npm run dev`) pod adresem `http://localhost:5183`.
+   - Utworzenie folderów w `src`:
 
-2. **Instalacja biblioteki komponentów Mantine**
+     - `app` – miejsce na współdzielone pliki między modułami,
+     - `api` – logika związana z zapytaniami do API,
+     - `lib` – konfiguracja bibliotek (np. Axios),
+     - `types` – współdzielone typy,
+     - `components` – komponenty wielokrotnego użytku,
+     - `views` – widoki aplikacji (np. `Home`).
 
-   - Dodanie paczek: `@mantine/core`, `@mantine/hooks`.
-   - Instalacja PostCSS i konfiguracja pliku `postcss.config.js`.
-   - Dodanie stylów Mantine w pliku głównym (`main.tsx`).
-   - Owrapowanie aplikacji w `MantineProvider`.
+2. **Integracja z API**
 
-3. **Pierwszy komponent**
+   - Utworzenie zapytań HTTP dla autorów (`getAuthorById`, `getAuthors`, `addAuthor`, `editAuthor`, `deleteAuthor`).
+   - Utworzenie analogicznych zapytań dla książek.
+   - Konfiguracja **Axios** w `lib/api.ts` z wykorzystaniem zmiennych środowiskowych (`VITE_API_URL`).
 
-   - Utworzenie prostego przycisku z Mantine (`<Button>Hello</Button>`).
-   - Weryfikacja poprawności działania komponentów i stylów.
+3. **React Query**
 
-4. **Konfiguracja formatowania kodu**
+   - Implementacja custom hooków (`useGetAuthor`, `useGetAuthors`, itd.).
+   - Konfiguracja obiektów `queries` z kluczami (`authorQueries`, `bookQueries`).
+   - Obsługa cache, stanów ładowania, błędów i ponownych zapytań.
 
-   - Włączenie automatycznego formatowania przy zapisie (`Prettier`).
-   - Instalacja i konfiguracja wtyczki Prettier w VS Code.
+4. **Typy i DTO**
 
-5. **Czyszczenie projektu**
+   - Utworzenie typów dla pojedynczych obiektów (`Author`, `Book`).
+   - Utworzenie generycznego typu `PaginatedResponse<T>` dla list z paginacją.
+   - Zdefiniowanie `PaginationParams` (`page`, `limit`).
 
-   - Usunięcie zbędnych plików i stylów (np. `App.css`).
-   - Grupowanie importów i usunięcie nieużywanych elementów.
+5. **Mutacje (CRUD)**
 
-6. **Instalacja dodatkowych bibliotek**
+   - Dodanie zapytań `addAuthor`, `editAuthor`, `deleteAuthor`.
+   - Analogiczne implementacje dla książek.
+   - Wykorzystanie walidacji przy pomocy **Zod**.
 
-   - `axios` – komunikacja z API.
-   - `react-hook-form` – obsługa formularzy.
-   - `react-query` – zarządzanie stanem danych, cache, obsługa błędów i ładowania.
-   - Konfiguracja `QueryClientProvider` w pliku głównym aplikacji.
+6. **Testowanie**
 
-7. **Konfiguracja ESLint**
-
-   - Instalacja ESLint i dodanie reguł dostarczonych przez Mantine oraz React Query.
-   - Aktualizacja konfiguracji parsera TypeScript i ustawień projektu.
-   - Ignorowanie plików konfiguracyjnych (`*.config.js`, `*.cjs`).
-   - Restart serwera ESLint i weryfikacja działania.
+   - Pobranie pojedynczego autora i wyświetlenie jego danych.
+   - Pobranie listy autorów i książek z paginacją.
+   - Testowanie dodawania, edycji i usuwania rekordów.
 
 ## Efekt końcowy
 
 Po zakończeniu modułu posiadamy:
 
-- działającą aplikację React z Vite,
-- skonfigurowaną bibliotekę komponentów Mantine,
-- dodatkowe narzędzia wspierające integrację z API i walidację formularzy,
-- czyste i ujednolicone środowisko deweloperskie.
+- przejrzystą strukturę projektu frontendowego,
+- pełną integrację z API (CRUD dla autorów i książek),
+- obsługę cache i stanów w **React Query**,
+- typowanie danych i paginację,
+- wstępne przygotowanie do budowy UI (tabelki, formularze).
 
 ## Zapowiedź kolejnego modułu
 
-W kolejnym etapie zajmiemy się tworzeniem struktury frontendowej aplikacji oraz implementacją komponentów do obsługi danych z API.
+W kolejnym materiale pokażę, jak stworzyć tabelki do wyświetlania danych oraz jak dodać obsługę dodawania, edycji i usuwania rekordów bezpośrednio z poziomu UI.
