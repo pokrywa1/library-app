@@ -1,60 +1,61 @@
-# Moduł 6 – Struktura frontendu i integracja z API
+# Moduł 7 – Wyświetlanie list i wzorzec Render Props
 
-W szóstym module tworzymy strukturę projektu frontendowego oraz implementujemy integrację z API dla autorów i książek. Skupiamy się na pobieraniu, dodawaniu, edycji i usuwaniu danych.
+W siódmym module implementujemy wyświetlanie list autorów i książek w tabelkach. Uczymy się korzystać z paginacji, obsługi błędów oraz ładowania. Dodatkowo wprowadzamy wzorzec projektowy **Render Props**, który pozwala uprościć logikę i zwiększyć reużywalność komponentów.
 
 ## Kroki realizowane w module
 
-1. **Struktura projektu**
+1. **Lista autorów**
 
-   - Utworzenie folderów w `src`:
+   - Utworzenie komponentu `AuthorsDataTable` wewnątrz widoku `Home`.
+   - Pobranie danych z API przy pomocy hooka `useGetAuthors`.
+   - Obsługa stanów `isLoading`, `isError`, `error`.
+   - Wyświetlenie tabelki Mantine z kolumnami: _nazwa_, _adres e-mail_.
+   - Dodanie nagłówka i informacji o liczbie rekordów.
 
-     - `app` – miejsce na współdzielone pliki między modułami,
-     - `api` – logika związana z zapytaniami do API,
-     - `lib` – konfiguracja bibliotek (np. Axios),
-     - `types` – współdzielone typy,
-     - `components` – komponenty wielokrotnego użytku,
-     - `views` – widoki aplikacji (np. `Home`).
+2. **Paginacja**
 
-2. **Integracja z API**
+   - Dodanie stanu `page` oraz limitu (np. 10).
+   - Wykorzystanie komponentu `Pagination` z Mantine.
+   - Obsługa zmiany strony i dynamiczne odświeżanie danych.
 
-   - Utworzenie zapytań HTTP dla autorów (`getAuthorById`, `getAuthors`, `addAuthor`, `editAuthor`, `deleteAuthor`).
-   - Utworzenie analogicznych zapytań dla książek.
-   - Konfiguracja **Axios** w `lib/api.ts` z wykorzystaniem zmiennych środowiskowych (`VITE_API_URL`).
+3. **Obsługa błędów**
 
-3. **React Query**
+   - Wyświetlanie komunikatu o błędzie w przypadku problemu z API.
+   - Testowanie poprzez wyłączenie backendu (sprawdzenie komunikatu _Network error_).
 
-   - Implementacja custom hooków (`useGetAuthor`, `useGetAuthors`, itd.).
-   - Konfiguracja obiektów `queries` z kluczami (`authorQueries`, `bookQueries`).
-   - Obsługa cache, stanów ładowania, błędów i ponownych zapytań.
+4. **Tabela książek**
 
-4. **Typy i DTO**
+   - Implementacja analogiczna jak dla autorów.
+   - Pobieranie listy książek z paginacją i wyświetlanie w tabelce.
 
-   - Utworzenie typów dla pojedynczych obiektów (`Author`, `Book`).
-   - Utworzenie generycznego typu `PaginatedResponse<T>` dla list z paginacją.
-   - Zdefiniowanie `PaginationParams` (`page`, `limit`).
+5. **Wzorzec Render Props**
 
-5. **Mutacje (CRUD)**
+   - Utworzenie generycznego komponentu `PaginatedQuery`.
+   - Parametry: `query`, `render`, `currentPage`, `onPageChange`.
+   - Obsługa logiki: ładowanie, błąd, brak danych, paginacja.
+   - Zwracanie danych do funkcji `render` w postaci listy elementów.
 
-   - Dodanie zapytań `addAuthor`, `editAuthor`, `deleteAuthor`.
-   - Analogiczne implementacje dla książek.
-   - Wykorzystanie walidacji przy pomocy **Zod**.
+6. **Refaktoryzacja kodu**
 
-6. **Testowanie**
+   - Usunięcie powielonej logiki z komponentów autorów i książek.
+   - Przeniesienie wspólnych fragmentów do `PaginatedQuery`.
+   - Utworzenie komponentu `CardWithTitle` (karta z nagłówkiem) w folderze `components/shared`.
 
-   - Pobranie pojedynczego autora i wyświetlenie jego danych.
-   - Pobranie listy autorów i książek z paginacją.
-   - Testowanie dodawania, edycji i usuwania rekordów.
+7. **Konfiguracja paginacji**
+
+   - Utworzenie pliku konfiguracyjnego `config/api.ts`.
+   - Definicja `PAGE_SIZE` i `DEFAULT_PAGINATION`.
+   - Zastosowanie wartości konfiguracyjnych w widokach.
 
 ## Efekt końcowy
 
 Po zakończeniu modułu posiadamy:
 
-- przejrzystą strukturę projektu frontendowego,
-- pełną integrację z API (CRUD dla autorów i książek),
-- obsługę cache i stanów w **React Query**,
-- typowanie danych i paginację,
-- wstępne przygotowanie do budowy UI (tabelki, formularze).
+- tabelki z autorami i książkami,
+- działającą paginację i obsługę błędów,
+- uproszczoną logikę dzięki wzorcowi **Render Props**,
+- reużywalne komponenty (`PaginatedQuery`, `CardWithTitle`).
 
 ## Zapowiedź kolejnego modułu
 
-W kolejnym materiale pokażę, jak stworzyć tabelki do wyświetlania danych oraz jak dodać obsługę dodawania, edycji i usuwania rekordów bezpośrednio z poziomu UI.
+W następnym materiale zajmiemy się mutacjami: dodawaniem, edycją i usuwaniem rekordów w tabelkach autorów i książek.
