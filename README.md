@@ -1,61 +1,56 @@
-# Moduł 7 – Wyświetlanie list i wzorzec Render Props
+# Moduł 8 – Mutacje: dodawanie, edycja i usuwanie danych
 
-W siódmym module implementujemy wyświetlanie list autorów i książek w tabelkach. Uczymy się korzystać z paginacji, obsługi błędów oraz ładowania. Dodatkowo wprowadzamy wzorzec projektowy **Render Props**, który pozwala uprościć logikę i zwiększyć reużywalność komponentów.
+W ósmym module rozszerzamy frontend o obsługę mutacji, czyli możliwość dodawania, edytowania i usuwania rekordów (autorów i książek). Używamy do tego React Hook Form, React Query oraz Mantine.
 
 ## Kroki realizowane w module
 
-1. **Lista autorów**
+1. **Przygotowanie komponentów formularzy**
 
-   - Utworzenie komponentu `AuthorsDataTable` wewnątrz widoku `Home`.
-   - Pobranie danych z API przy pomocy hooka `useGetAuthors`.
-   - Obsługa stanów `isLoading`, `isError`, `error`.
-   - Wyświetlenie tabelki Mantine z kolumnami: _nazwa_, _adres e-mail_.
-   - Dodanie nagłówka i informacji o liczbie rekordów.
+   - Utworzenie folderu `inputs` w komponentach współdzielonych.
+   - Stworzenie własnych pól formularza (`InputText`, `InputTextController`) opartych na Mantine.
+   - Dodanie walidacji przy użyciu **Zod** i `@hookform/resolvers/zod`.
 
-2. **Paginacja**
+2. **Dodawanie autora**
 
-   - Dodanie stanu `page` oraz limitu (np. 10).
-   - Wykorzystanie komponentu `Pagination` z Mantine.
-   - Obsługa zmiany strony i dynamiczne odświeżanie danych.
+   - Stworzenie komponentu `AuthorAddButtonWithModal`.
+   - Formularz do wprowadzania `name` i `email`.
+   - Obsługa mutacji z użyciem `useMutation` i API `addAuthor`.
+   - Reset formularza po sukcesie, wyświetlenie błędów przy pomocy **React Hot Toast**.
+   - Odświeżanie listy autorów za pomocą `queryClient.invalidateQueries`.
 
-3. **Obsługa błędów**
+3. **Usuwanie autora**
 
-   - Wyświetlanie komunikatu o błędzie w przypadku problemu z API.
-   - Testowanie poprzez wyłączenie backendu (sprawdzenie komunikatu _Network error_).
+   - Dodanie przycisku akcji w tabeli (`AuthorDataTableActions`).
+   - Obsługa usuwania z potwierdzeniem w modalu.
+   - Mutacja `deleteAuthor` z obsługą błędów (np. próba usunięcia autora powiązanego z książką).
 
-4. **Tabela książek**
+4. **Edycja autora**
 
-   - Implementacja analogiczna jak dla autorów.
-   - Pobieranie listy książek z paginacją i wyświetlanie w tabelce.
+   - Utworzenie komponentu `AuthorEditButtonWithModal`.
+   - Formularz z wartościami domyślnymi pobranymi z API.
+   - Mutacja `editAuthor` z obsługą błędów i odświeżaniem danych.
 
-5. **Wzorzec Render Props**
+5. **Mutacje dla książek**
 
-   - Utworzenie generycznego komponentu `PaginatedQuery`.
-   - Parametry: `query`, `render`, `currentPage`, `onPageChange`.
-   - Obsługa logiki: ładowanie, błąd, brak danych, paginacja.
-   - Zwracanie danych do funkcji `render` w postaci listy elementów.
+   - Analogiczne implementacje jak dla autorów (`BookAddButtonWithModal`, `BookEditButtonWithModal`, `BookDeleteButton`).
+   - Dodatkowe pole `authorId` z kontrolowanym selectem (lista autorów pobierana z API).
+   - Optymalizacja pobierania listy autorów – dane ładowane dopiero po otwarciu modala.
 
-6. **Refaktoryzacja kodu**
+6. **Obsługa rerenderów**
 
-   - Usunięcie powielonej logiki z komponentów autorów i książek.
-   - Przeniesienie wspólnych fragmentów do `PaginatedQuery`.
-   - Utworzenie komponentu `CardWithTitle` (karta z nagłówkiem) w folderze `components/shared`.
-
-7. **Konfiguracja paginacji**
-
-   - Utworzenie pliku konfiguracyjnego `config/api.ts`.
-   - Definicja `PAGE_SIZE` i `DEFAULT_PAGINATION`.
-   - Zastosowanie wartości konfiguracyjnych w widokach.
+   - Refaktoryzacja komponentów, aby unikać zbędnych zapytań do API.
+   - Logika formularza renderowana dopiero przy otwarciu modala.
 
 ## Efekt końcowy
 
 Po zakończeniu modułu posiadamy:
 
-- tabelki z autorami i książkami,
-- działającą paginację i obsługę błędów,
-- uproszczoną logikę dzięki wzorcowi **Render Props**,
-- reużywalne komponenty (`PaginatedQuery`, `CardWithTitle`).
+- pełną obsługę mutacji (dodawanie, edycja, usuwanie) dla autorów i książek,
+- walidację danych w formularzach z wykorzystaniem **Zod**,
+- komponenty reużywalne dla pól formularzy i przycisków akcji,
+- optymalizację zapytań i obsługę błędów,
+- spójny i gotowy do rozbudowy frontend.
 
 ## Zapowiedź kolejnego modułu
 
-W następnym materiale zajmiemy się mutacjami: dodawaniem, edycją i usuwaniem rekordów w tabelkach autorów i książek.
+W kolejnym materiale pokażę, jak przetestować aplikację – backend (testy wydajności API oraz inicjalizacja dużym zbiorem danych).
