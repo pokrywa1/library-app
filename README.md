@@ -1,56 +1,54 @@
-# Moduł 8 – Mutacje: dodawanie, edycja i usuwanie danych
+# Moduł 9 – Testowanie wydajności i obciążenia
 
-W ósmym module rozszerzamy frontend o obsługę mutacji, czyli możliwość dodawania, edytowania i usuwania rekordów (autorów i książek). Używamy do tego React Hook Form, React Query oraz Mantine.
+W dziewiątym module testujemy aplikację pod kątem wydajności i odporności na obciążenie. Uzupełniamy bazę danymi testowymi, a następnie symulujemy setki użytkowników wykonujących zapytania jednocześnie.
 
 ## Kroki realizowane w module
 
-1. **Przygotowanie komponentów formularzy**
+1. **Seedowanie bazy danych**
 
-   - Utworzenie folderu `inputs` w komponentach współdzielonych.
-   - Stworzenie własnych pól formularza (`InputText`, `InputTextController`) opartych na Mantine.
-   - Dodanie walidacji przy użyciu **Zod** i `@hookform/resolvers/zod`.
+   - Utworzenie folderu `seeder` z plikiem `index.js`.
+   - Instalacja paczki **faker** do generowania losowych danych (np. polskie imiona i e-maile).
+   - Skrypt wysyłający zapytania `POST /authors` z wykorzystaniem `fetch`.
+   - Dodanie opóźnień (`setTimeout`, `await sleep`) w celu uniknięcia przeciążenia.
+   - Wygenerowanie najpierw kilku rekordów, a następnie nawet kilku tysięcy autorów.
 
-2. **Dodawanie autora**
+2. **Weryfikacja w aplikacji**
 
-   - Stworzenie komponentu `AuthorAddButtonWithModal`.
-   - Formularz do wprowadzania `name` i `email`.
-   - Obsługa mutacji z użyciem `useMutation` i API `addAuthor`.
-   - Reset formularza po sukcesie, wyświetlenie błędów przy pomocy **React Hot Toast**.
-   - Odświeżanie listy autorów za pomocą `queryClient.invalidateQueries`.
+   - Sprawdzenie działania paginacji na froncie (większa liczba stron).
+   - Podgląd danych w **pgAdmin** i weryfikacja poprawności.
 
-3. **Usuwanie autora**
+3. **Testy obciążeniowe z K6**
 
-   - Dodanie przycisku akcji w tabeli (`AuthorDataTableActions`).
-   - Obsługa usuwania z potwierdzeniem w modalu.
-   - Mutacja `deleteAuthor` z obsługą błędów (np. próba usunięcia autora powiązanego z książką).
+   - Instalacja i konfiguracja narzędzia **K6**.
+   - Utworzenie katalogu `k6` oraz pliku `api_test.js`.
+   - Konfiguracja symulacji: np. 300 wirtualnych użytkowników, czas trwania 30s.
+   - Test endpointu GET `/authors`.
+   - Analiza raportu: średni czas odpowiedzi, mediana, liczba zapytań, procent sukcesów.
 
-4. **Edycja autora**
+4. **Porównanie wyników – z paginacją i bez**
 
-   - Utworzenie komponentu `AuthorEditButtonWithModal`.
-   - Formularz z wartościami domyślnymi pobranymi z API.
-   - Mutacja `editAuthor` z obsługą błędów i odświeżaniem danych.
+   - Test zapytania zwracającego wszystkich autorów bez paginacji.
+   - Sprawdzenie, jak rośnie średni czas odpowiedzi (np. z 14ms do 73ms).
+   - Analiza wpływu ilości rekordów w bazie na wydajność zapytań.
 
-5. **Mutacje dla książek**
+5. **Wnioski**
 
-   - Analogiczne implementacje jak dla autorów (`BookAddButtonWithModal`, `BookEditButtonWithModal`, `BookDeleteButton`).
-   - Dodatkowe pole `authorId` z kontrolowanym selectem (lista autorów pobierana z API).
-   - Optymalizacja pobierania listy autorów – dane ładowane dopiero po otwarciu modala.
-
-6. **Obsługa rerenderów**
-
-   - Refaktoryzacja komponentów, aby unikać zbędnych zapytań do API.
-   - Logika formularza renderowana dopiero przy otwarciu modala.
+   - Paginacja znacząco poprawia wydajność i zmniejsza obciążenie bazy danych.
+   - Nawet przy kilku tysiącach rekordów aplikacja działa sprawnie dzięki limitowaniu zwracanych danych.
 
 ## Efekt końcowy
 
 Po zakończeniu modułu posiadamy:
 
-- pełną obsługę mutacji (dodawanie, edycja, usuwanie) dla autorów i książek,
-- walidację danych w formularzach z wykorzystaniem **Zod**,
-- komponenty reużywalne dla pól formularzy i przycisków akcji,
-- optymalizację zapytań i obsługę błędów,
-- spójny i gotowy do rozbudowy frontend.
+- skrypt seedujący bazę danymi testowymi,
+- skonfigurowane testy obciążeniowe w K6,
+- wyniki pokazujące różnicę pomiędzy zapytaniami z paginacją i bez niej,
+- świadomość, jak planować skalowalność aplikacji.
 
-## Zapowiedź kolejnego modułu
+## Kolejne kroki
 
-W kolejnym materiale pokażę, jak przetestować aplikację – backend (testy wydajności API oraz inicjalizacja dużym zbiorem danych).
+Na tym etapie kończymy podstawową część kursu. Możesz rozbudować aplikację o dodatkowe funkcjonalności, np.:
+
+- wyświetlanie szczegółów autora i jego książek,
+- zliczanie książek przypisanych do autora,
+- zaawansowaną obsługę błędów i wyjątków.
